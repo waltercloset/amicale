@@ -88,7 +88,6 @@ const BlogIndex = (props) => {
       <SEO title="All posts" />
 
       <NavBar/>
-      <Bio />
       <Liste>
         {posts.map(({ node }) => {
           let imageSource =null;
