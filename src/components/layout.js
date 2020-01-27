@@ -9,41 +9,11 @@ const Layout = (props) => {
     let header
 
     if (location.pathname === rootPath) {
-      header = (
-        <>
-          <h1
-            style={{
-              ...scale(1.5),
-              marginBottom: 0,
-              marginTop: 0,
-            }}
-          >
-            <Link
-              style={{
-                boxShadow: `none`,
-                textDecoration: `none`,
-                color: `inherit`,
-              }}
-              to={`/`}
-            >
-              {title}
-            </Link>
-          </h1>
-          <div
-          style={{
-            ...scale(0.5),
-            marginBottom: rhythm(1.5),
-            marginTop: 0,
-            color: '#666',
-          }}
-          >
-            With ❤ for Netlify
-          </div>
-        </>
-      )
+      header = (<div></div>);
+
     } else {
       header = (
-        <>
+        <div>
         <h3
           style={{
             fontFamily: `Montserrat, sans-serif`,
@@ -72,7 +42,7 @@ const Layout = (props) => {
         >
           With ❤ for Netlify
         </div>
-        </>
+        </div>
       )
     }
     return (
@@ -80,31 +50,11 @@ const Layout = (props) => {
         style={{
           marginLeft: `auto`,
           marginRight: `auto`,
-          maxWidth: rhythm(23),
-          padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
+          maxWidth: rhythm(100),
+          padding: `${rhythm(1)} ${rhythm(1)}`,
         }}
       >
-        <iframe
-          title="Star on GitHub"
-          src="https://ghbtns.com/github-btn.html?user=justinwhall&repo=gatsby-wordpress-netlify-starter&type=star&count=true&size=large"
-          frameBorder="0"
-          scrolling="0"
-          width="158px"
-          height="30px"
-          style={{
-            position: 'absolute',
-            left: 10,
-            top: 10,
-          }}
-          ></iframe>
-          <a
-          href="https://justinwhall.com/headless-wordpress-gatsby-netlify-continous-deployment/"
-          style={{
-            position: 'absolute',
-            left: 150,
-            top: 10,
-          }}
-        >Get Started</a>
+
         <header>{header}</header>
         <main>{children}</main>
         <footer>

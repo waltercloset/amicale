@@ -1,8 +1,8 @@
 {
-  "name": "gatsby-wordpress-netlify-starter",
-  "description": "A starter for a blog powered by Gatsby and Markdown",
-  "version": "2.0.0",
-  "author": "Justin W Hall",
+  "name": "amicale.online",
+  "description": "L'amicale du futur",
+  "version": "beta 1",
+  "author": "amicalistes",
   "keywords": [
     "gatsby"
   ],
@@ -10,10 +10,10 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git@github.com:justinwhall/gatsby-wordpress-netlify-starter.git"
+    "url": "git@github.com:cyberpoussin/amicale.git"
   },
   "scripts": {
-    "develop": "DEPLOY_ENV=lbn_published_production gatsby develop",
+    "develop": "DEPLOY_ENV=lbn_published_stage gatsby develop",
     "build": "gatsby build",
     "format": "prettier --write src/**/*.{js,jsx}",
     "start": "npm run develop",

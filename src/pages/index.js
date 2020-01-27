@@ -86,13 +86,13 @@ const BlogIndex = (props) => {
   return (
     <Layout location={props.location} title={title}>
       <SEO title="All posts" />
-      <Bio />
-      <NavBar/>
 
+      <NavBar/>
+      <Bio />
       <Liste>
         {posts.map(({ node }) => {
           let imageSource =null;
-          if(node.featured_media && node.featured_media.localFile.childImageSharp){
+          if(node.featured_media && node.featured_media.localFile && node.featured_media.localFile.childImageSharp){
             imageSource = node.featured_media.localFile.childImageSharp
             .fluid
           }

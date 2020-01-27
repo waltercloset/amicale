@@ -1,17 +1,30 @@
 import Typography from "typography"
-import Wordpress2016 from "typography-theme-wordpress-2016"
-
-Wordpress2016.overrideThemeStyles = () => {
-  return {
-    "a.gatsby-resp-image-link": {
-      boxShadow: `none`,
+const typography = new Typography({
+  baseFontSize: '18px',
+  baseLineHeight: 1.666,
+  headerFontFamily: ['Libre Baskerville','Comic Sans MS','Avenir Next', 'Helvetica Neue', 'Segoe UI', 'Helvetica', 'Arial', 'sans-serif'],
+  bodyFontFamily: ['Libre Baskerville','Comic Sans MS','Georgia', 'serif'],
+  googleFonts: [
+    {
+      name: 'Libre Baskerville',
+      styles: [
+        '400',
+        '400i',
+        '700',
+        '700i',
+      ],
     },
-  }
-}
-
-delete Wordpress2016.googleFonts
-
-const typography = new Typography(Wordpress2016)
+    {
+      name: 'Merriweather',
+      styles: [
+        '400',
+        '400i',
+        '700',
+        '700i',
+      ],
+    },
+  ],
+})
 
 // Hot reload typography in development.
 if (process.env.NODE_ENV !== `production`) {
