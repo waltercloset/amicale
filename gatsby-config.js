@@ -1,11 +1,11 @@
 module.exports = {
   siteMetadata: {
-    title: `WordPress Gatsby Starter`,
-    author: `Justin W Hall`,
-    description: `A Gatsby WordPress Starter with special love for Netlify`,
-    siteUrl: `https://gatsby-wordpress-netlify-production.netlify.com`,
+    title: `L'amicale du futur`,
+    author: `amicalistes`,
+    description: `L'amicale c'est bien`,
+    siteUrl: `https://amicale.online`,
     social: {
-      twitter: `justinwhall`,
+      twitter: `lyonseleve`,
     },
     postPrefix : '/blog',
     pagePrefix: '',
@@ -56,11 +56,12 @@ module.exports = {
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        //trackingId: `ADD YOUR TRACKING ID HERE`,
+        // trackingId: `ADD YOUR TRACKING ID HERE`,
       },
     },
     `gatsby-plugin-offline`,
     `gatsby-plugin-react-helmet`,
+    `gatsby-plugin-styled-components`,
     {
       resolve: `gatsby-plugin-typography`,
       options: {

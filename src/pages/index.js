@@ -5,6 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
+import {Img} from "gatsby-image"
 
 const BlogIndex = (props) => {
   const {
@@ -30,6 +31,7 @@ const BlogIndex = (props) => {
               </Link>
             </h3>
             <small>{node.date}</small>
+            <Img fluid={node.featured_media.localFile.childImageSharp.fluid} />
             <p
               dangerouslySetInnerHTML={{
                 __html: node.excerpt,
@@ -62,16 +64,21 @@ export const pageQuery = graphql`
       ) {
       edges {
         node {
-          date(formatString: "MMMM DD, YYYY")
-          slug
           title
           excerpt
-          id
+          slug
+          date(formatString: "ddd Do MM YYYY k:mm ", locale: "fr-FR")
           featured_media {
-            source_url
-          }
-          categories {
-            name
+            localFile {
+
+                childImageSharp {
+                  # Try editing the "width" and "height" values.
+                  fluid(maxWidth: 500) {
+                    ...GatsbyImageSharpFluid_withWebp
+                  }
+                }
+
+            }
           }
         }
       }
