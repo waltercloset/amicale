@@ -49,15 +49,7 @@ module.exports = {
         normalizer: function({ entities }) {
           return entities
         },
-        plugins: [
-          {
-            resolve: `gatsby-wordpress-inline-images`,
-            options: {
-              baseUrl: `amicale.online`,
-              protocol: `https`
-            }
-          }
-        ],
+
       }
     },
     `gatsby-transformer-sharp`,
