@@ -95,12 +95,14 @@ const BlogIndex = (props) => {
             imageSource = node.featured_media.localFile.childImageSharp
             .fluid
           }
-          let dateEvent;
+          let dateEvent = null;
           if(node.acf.date_de_levenement) {
             dateEvent=new Date(node.acf.date_de_levenement);
           } else {
-            dateEvent=null;
+            dateEvent=node.wpcf_date+' '+node.date+' '+node.wpcf_heure;
           }
+
+
           return (
           <Post key={node.slug}>
             <Infos location= {props.location} date={dateEvent} cats={node.tags} />
@@ -142,7 +144,10 @@ export const pageQuery = graphql`
           title
           excerpt
           slug
-          date(formatString: "")
+          date(formatString: "YYYY")
+          wpcf_date
+          wpcf_heure
+          wpcf_type
           tags {
             name
           }
