@@ -7,7 +7,7 @@ module.exports = {
     social: {
       twitter: `lyonseleve`,
     },
-    postPrefix : '/blog',
+    postPrefix : '',
     pagePrefix: '',
   },
   plugins: [

@@ -5,6 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 import { rhythm } from "../utils/typography"
+import Infos from "../components/infos"
 
 const PostTemplate = (props) => {
 
@@ -22,6 +23,7 @@ const PostTemplate = (props) => {
         title={post.title}
         description={post.excerpt}
       />
+      <Infos date={post.acf.date_de_levenement? new Date(post.acf.date_de_levenement) : null} location={props.location}/>>
         <h1>{post.title} </h1>
         {featuredImage &&
               <img src={featuredImage} alt={post.title} className="featured-image" />
@@ -78,6 +80,9 @@ export const pageQuery = graphql`
         slug
       }
       content
+      acf {
+        date_de_levenement
+      }
     }
   }
 `

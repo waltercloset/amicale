@@ -95,9 +95,15 @@ const BlogIndex = (props) => {
             imageSource = node.featured_media.localFile.childImageSharp
             .fluid
           }
+          let dateEvent;
+          if(node.acf.date_de_levenement) {
+            dateEvent=new Date(node.acf.date_de_levenement);
+          } else {
+            dateEvent=null;
+          }
           return (
           <Post key={node.slug}>
-            <Infos date={node.date.split(' ')} cats={['test','encore']} />
+            <Infos location= {props.location} date={dateEvent} cats={node.tags} />
             <Link to={node.slug}>
               {imageSource&&<Avatar fluid={imageSource} />}
             </Link>
@@ -136,7 +142,13 @@ export const pageQuery = graphql`
           title
           excerpt
           slug
-          date(formatString: "ddd Do MM YYYY k:mm ", locale: "fr-FR")
+          date(formatString: "")
+          tags {
+            name
+          }
+          acf {
+            date_de_levenement
+          }
           featured_media {
             localFile {
 

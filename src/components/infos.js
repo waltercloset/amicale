@@ -18,13 +18,19 @@ const Inf = styled.div`
     }
 `
 
-const Infos=(props)=>(
+const Infos=(props)=>{
+  const rootPath = `${__PATH_PREFIX__}/`
+  let date=[];
+  if(props.date && props.location.pathname === rootPath) {date=props.date.toLocaleDateString('fr-FR', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour:'numeric', minute:'numeric'}).split(' ')}
+  if(props.date && props.location.pathname !== rootPath) {date=props.date.toLocaleDateString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric'}).split(' ')}
+
+  return (
     <Inf>
-        <p>{props.date[0]+' '+props.date[1]}{isNaN(props.date[2])?' ':'.'}{props.date[2]}</p>
+        <p>{date[0]? date[0]+' '+date[1]+' '+date[2]:'Il y a très longtemps'}</p>
         <p>–</p>
-        <p>{props.date[4]}</p>
-        <p className="cats">{props.cats}</p>
+        <p>{date[5]?date[5]:'Dans une lointaine galaxie'}</p>
+        <p className="cats">{props.cats && props.cats.map(tag=>(tag.name+' '))}</p>
     </Inf>
-)
+)}
 
 export default Infos;
