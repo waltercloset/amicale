@@ -95,17 +95,18 @@ const BlogIndex = (props) => {
             imageSource = node.featured_media.localFile.childImageSharp
             .fluid
           }
-          let dateEvent = null;
+          let date = null;
+          let oldDate = null;
           if(node.acf.date_de_levenement) {
-            dateEvent=new Date(node.acf.date_de_levenement);
+            date=new Date(node.acf.date_de_levenement);
           } else {
-            dateEvent=node.wpcf_date+' '+node.date+' '+node.wpcf_heure;
+            oldDate=node.wpcf_date+' '+node.date+' '+node.wpcf_heure;
           }
 
 
           return (
           <Post key={node.slug}>
-            <Infos location= {props.location} date={dateEvent} cats={node.tags} />
+            <Infos location= {props.location} date={date} oldDate={oldDate} cats={node.tags} />
             <Link to={node.slug}>
               {imageSource&&<Avatar fluid={imageSource} />}
             </Link>
