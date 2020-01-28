@@ -20,7 +20,7 @@ const Pic=styled(Img)`
   object-fit: cover;
   width: 300px;
 `
-const BASELINE=25.6;
+const BASELINE=25;
 
 export const Cimage =(props) => {
     let height=(props.height / props.width)*300;
