@@ -10,18 +10,14 @@ import styled from "styled-components"
 import NavBar from "../components/navbar"
 import Infos from "../components/infos"
 import Img from "gatsby-image"
+import moment from 'moment'
 
 
 const Avatar = styled(Img)`
   width: 100%;
-  min-width:300px;
   overflow:hidden;
   margin-left:auto;
-  filter: grayscale(100%);
-  &:hover{
-    filter: none;
-    transition: filter 0.5s ease;
-  }
+
 `
 const Post = styled.div`
     display:flex;
@@ -29,6 +25,13 @@ const Post = styled.div`
     flex: 1 1 25%;
     padding: 1em;
     min-width:300px;
+    filter: ${props => props.vieux? 'grayscale(100%)' : 'grayscale(20%)'};
+    opacity: ${props => props.vieux? '0.7' : '1'};
+    &:hover {
+      opacity:1;
+      filter: none;
+      transition: filter 2s ease;
+    }
 
 `
 const Button=styled(Link)`
@@ -91,24 +94,21 @@ const BlogIndex = (props) => {
       <Liste>
         {posts.map(({ node }) => {
           let imageSource =null;
+          let vieux=false;
+          const dateActuelle=new Date();
+
           if(node.featured_media && node.featured_media.localFile && node.featured_media.localFile.childImageSharp){
             imageSource = node.featured_media.localFile.childImageSharp
             .fluid
           }
-          let date = null;
-          let oldDate = null;
-          if(node.acf.date_de_levenement) {
-            date=node.acf.date_de_levenement;
-          } else {
-            oldDate=node.wpcf_date+' '+node.date+' '+node.wpcf_heure;
-          }
+          if(node.fields.dateEv && moment(node.fields.dateEv).isBefore(moment(dateActuelle))) vieux=true;
 
 
           return (
-          <Post key={node.slug}>
-            <Infos location= {props.location} date={date} oldDate={oldDate} cats={node.tags} />
+          <Post key={node.slug} vieux={vieux}>
+            <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
             <Link to={node.slug}>
-              {imageSource&&<Avatar fluid={imageSource} />}
+              {imageSource&&<Avatar vieux={vieux} fluid={imageSource} />}
             </Link>
             <Title to={node.slug} dangerouslySetInnerHTML={{ __html: node.title }} />>
 
@@ -137,8 +137,9 @@ export const pageQuery = graphql`
          fields: {
            deploy: {eq: true}
          }
-       }
-        limit: 100
+       },
+       sort: { fields: [fields___dateEv], order: DESC },
+       limit: 100
       ) {
       edges {
         node {
@@ -149,6 +150,9 @@ export const pageQuery = graphql`
           wpcf_date
           wpcf_heure
           wpcf_type
+          fields {
+            dateEv
+          }
           tags {
             name
           }

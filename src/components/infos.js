@@ -3,6 +3,7 @@ import { graphql, Link } from "gatsby"
 import styled from "styled-components"
 import Moment from 'react-moment';
 import '../../node_modules/moment/locale/fr'
+import moment from 'moment'
 
 const Inf = styled.div`
     display:flex;
@@ -25,25 +26,25 @@ const Infos=(props)=>{
   let date=[];
   let affDate, affHeure;
   const dateActuelle=new Date();
+  let vieux=false;
   let annee=null;
+
   if(props.date && new Date(props.date).getUTCFullYear()<dateActuelle.getUTCFullYear()) {
     annee=(<Moment locale='fr' format="YYYY">{props.date}</Moment>);
   }
 
-  if(props.oldDate) {
-    date=props.oldDate.split(' ');
-    affDate=date[0]+' '+date[1];
-    annee=<div>{date[2]}</div>
-    affHeure=<div>{date[3]}</div>;
-  }
+
+  if(props.date && moment(props.date).isBefore(moment(dateActuelle))) vieux=true;
   if(props.date && props.location.pathname === rootPath) {
     //date=props.date.toLocaleDateString('fr-FR', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour:'numeric', minute:'numeric', timeZone: "Europe/Paris"}).split(' ')
     affDate=<Moment locale='fr' format="ddd D MMM">{props.date}</Moment>
     affHeure=<Moment locale='fr' format="H:mm">{props.date}</Moment>
 
   }
-  if(props.date && typeof(props.date)!== 'string' && props.location.pathname !== rootPath) {
+  if(props.date && props.location.pathname !== rootPath) {
     //date=props.date.toLocaleDateString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', timeZone: "Europe/Paris"}).split(' ')
+    affDate=<div>{moment(props.date).locale('fr').format('dddd D MMMM')}</div>;
+    affHeure=<div>{moment(props.date).locale('fr').format('H:mm')}</div>
   }
 
   return (

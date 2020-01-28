@@ -44,7 +44,10 @@ module.exports = {
         excludedRoutes: [
           "/*/*/comments",
           "/yoast/**",
-          "/oembed/*"
+          "/oembed/*",
+          "/laytheme",
+          "/wp/v2/block-renderer",
+          "/event"
         ],
         normalizer: function({ entities }) {
           return entities
