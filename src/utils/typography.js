@@ -42,6 +42,9 @@ const typography = new Typography({
         color: `black`,
         textDecoration: `none`,
       },
+      h2: {
+        lineHeight: rhythm(1),
+      },
       blockquote: {
         borderLeft: `${rhythm(1 / 4)} solid red`,
         color: `black`,

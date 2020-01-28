@@ -8,7 +8,7 @@ const Main=styled.main`
 
     ${Bar} {
       font-size: ${rhythm(1.1)};
-      height: 60px;
+      height: 50px;
 
       @media (max-width: 1024px) {
         font-size: ${rhythm(0.9)};
