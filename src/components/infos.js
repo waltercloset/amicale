@@ -7,7 +7,7 @@ import moment from 'moment'
 import { rhythm, scale } from "../utils/typography"
 
 
-const Inf = styled.div`
+const Inf = styled.h3`
     display:flex;
     flex-direction: column;
     justify-content:center;
@@ -17,6 +17,7 @@ const Inf = styled.div`
     .cats{
       font-size:70%;
     }
+    font-weight:400;
 `
 
 const Infos=(props)=>{
@@ -47,7 +48,7 @@ const Infos=(props)=>{
 
   return (
     <Inf>
-        <div style={{display:'flex'}}>{affDate}{annee}</div>
+        <span style={{display:'flex'}}>{affDate}{annee}</span>
         –
         {affHeure}
         <p className="cats">{props.cats && props.cats.map(tag=>(tag.name+' '))}</p>

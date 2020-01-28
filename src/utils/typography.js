@@ -23,6 +23,17 @@ const typography = new Typography({
         '700i',
       ],
     },
+    {
+      name: 'Roboto',
+      styles: [
+        '400',
+        '400i',
+        '500',
+        '900',
+        '700',
+        '700i',
+      ],
+    },
   ],
   overrideStyles: ({ rhythm, scale }, options) => {
     return {

@@ -56,12 +56,12 @@ exports.onCreateNode = ({ node, actions }) => {
 const createPosts = require('./gatsby/createPosts');
 const createPages = require('./gatsby/createPages');
 const createCategories = require('./gatsby/createCategories');
-const createIndex = require('./gatsby/createIndex');
+//const createIndex = require('./gatsby/createIndex');
 
 exports.createPages = async ({ actions, graphql }) => {
   await createPosts({ actions, graphql });
   await createPages({ actions, graphql });
-  await createIndex({ actions, graphql });
+  //await createIndex({ actions, graphql });
 
   await createCategories({ actions, graphql });
 }
