@@ -1,7 +1,30 @@
 import React from "react"
 import { Link } from "gatsby"
-
+import styled from 'styled-components'
 import { rhythm, scale } from "../utils/typography"
+import {Bar} from './navbar'
+
+const Main=styled.main`
+
+    ${Bar} {
+      font-size: ${rhythm(1.1)};
+      height: 60px;
+
+      @media (max-width: 1024px) {
+        font-size: ${rhythm(0.9)};
+      }
+      @media (max-width: 800px) {
+        flex-direction: column;
+        font-size: ${rhythm(0.8)};
+        height: 80px;
+      }
+      @media (max-width: 460px) {
+        flex-direction: column;
+        font-size: ${rhythm(0.8)};
+        height: 80px;
+      }
+  }
+`
 
 const Layout = (props) => {
     const { location, title, children } = props
@@ -51,12 +74,12 @@ const Layout = (props) => {
           marginLeft: `auto`,
           marginRight: `auto`,
           maxWidth: rhythm(100),
-          padding: `${rhythm(1)} ${rhythm(1)}`,
+          padding: `${rhythm(1)} ${rhythm(0)}`,
         }}
       >
 
         <header>{header}</header>
-        <main>{children}</main>
+        <Main>{children}</Main>
         <footer>
           © {new Date().getFullYear()}, Built with
           {` `}

@@ -4,17 +4,15 @@ import styled from "styled-components"
 import Moment from 'react-moment';
 import '../../node_modules/moment/locale/fr'
 import moment from 'moment'
+import { rhythm, scale } from "../utils/typography"
+
 
 const Inf = styled.div`
     display:flex;
     flex-direction: column;
     justify-content:center;
-    margin-bottom:1em;
-    p {
-      margin:0;
-    }
+    margin-bottom: ${rhythm(1)};
     text-transform: uppercase;
-    font-weight:300;
     color:black;
     .cats{
       font-size:70%;
@@ -49,8 +47,7 @@ const Infos=(props)=>{
 
   return (
     <Inf>
-        {affDate}
-        {annee}
+        <div style={{display:'flex'}}>{affDate}{annee}</div>
         –
         {affHeure}
         <p className="cats">{props.cats && props.cats.map(tag=>(tag.name+' '))}</p>

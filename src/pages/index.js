@@ -4,27 +4,26 @@ import { Link, graphql } from "gatsby"
 import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import { rhythm } from "../utils/typography"
+import { rhythm, scale } from "../utils/typography"
 import styled from "styled-components"
 
-import NavBar from "../components/navbar"
+import {NavBar} from "../components/navbar"
 import Infos from "../components/infos"
 import Img from "gatsby-image"
 import moment from 'moment'
+import {Cimage} from '../components/cimage'
 
 
-const Avatar = styled(Img)`
-  width: 100%;
-  overflow:hidden;
-  margin-left:auto;
+
+const Avatar = styled(Cimage)`
+    margin:auto;
 
 `
 const Post = styled.div`
     display:flex;
     flex-direction:column;
-    flex: 1 1 25%;
-    padding: 1em;
-    min-width:300px;
+    width:320px;
+    padding: 10px;
     filter: ${props => props.vieux? 'grayscale(100%)' : 'grayscale(20%)'};
     opacity: ${props => props.vieux? '0.7' : '1'};
     &:hover {
@@ -49,31 +48,28 @@ const Button=styled(Link)`
     transition: background-color 0.5s ease;
 `
 
-const Title = styled(Link)`
-  color: black;
-  font-size: 1.3em;
-  font-weight: 500;
-  line-height:32.8px;
+const Title = styled.h2`
   text-decoration: none;
+    padding-top:${rhythm(1)};
 `
 const Liste = styled.div`
   display:flex;
   flex-direction:row;
   flex-wrap: wrap;
-
+  justify-content: center;
   ul{
     list-style:none;
     display:flex;
     justify-content:center;
   }
   li{
-    padding: 0.21em
+    padding: ${rhythm(1)};
   }
 `
 
 const Desc = styled.div`
-  margin-top:1em;
-  margin-bottom:1em;
+  margin-top:${rhythm(1)};
+  margin-bottom:${rhythm(1)};
 `
 const Signature = styled.div`
   font-size:50%;
@@ -108,10 +104,12 @@ const BlogIndex = (props) => {
           <Post key={node.slug} vieux={vieux}>
             <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
             <Link to={node.slug}>
-              {imageSource&&<Avatar vieux={vieux} fluid={imageSource} />}
-            </Link>
-            <Title to={node.slug} dangerouslySetInnerHTML={{ __html: node.title }} />>
+              {imageSource&&<Avatar vieux={vieux} fluid={imageSource}
+                height={node.featured_media.media_details.height}
+                width={node.featured_media.media_details.width}/>}
+                <Title dangerouslySetInnerHTML={{ __html: node.title }} />
 
+            </Link>
             <Desc dangerouslySetInnerHTML={{ __html: node.excerpt }} />
             <Button to={node.slug}>Lire la suite →</Button>
 
@@ -160,6 +158,10 @@ export const pageQuery = graphql`
             date_de_levenement
           }
           featured_media {
+            media_details {
+              height
+              width
+            }
             localFile {
 
                 childImageSharp {
