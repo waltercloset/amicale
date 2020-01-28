@@ -98,7 +98,7 @@ const BlogIndex = (props) => {
           let date = null;
           let oldDate = null;
           if(node.acf.date_de_levenement) {
-            date=new Date(node.acf.date_de_levenement);
+            date=node.acf.date_de_levenement;
           } else {
             oldDate=node.wpcf_date+' '+node.date+' '+node.wpcf_heure;
           }
