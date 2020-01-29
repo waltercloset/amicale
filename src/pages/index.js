@@ -75,14 +75,16 @@ const Desc = styled.div`
 const Signature = styled.div`
   font-size:50%;
 `
-
+function shorten(str, maxLen, separator = ' ') {
+  if (str.length <= maxLen) return str;
+  return str.substr(0, str.lastIndexOf(separator, maxLen));
+}
 const BlogIndex = (props) => {
   const {
     title,
     postPrefix,
   } = props.data.site.siteMetadata;
   const posts = props.data.allWordpressPost.edges;
-
   return (
     <Layout location={props.location} title={title}>
       <SEO title="All posts" />
@@ -99,7 +101,13 @@ const BlogIndex = (props) => {
             .fluid
           }
           if(node.fields.dateEv && moment(node.fields.dateEv).isBefore(moment(dateActuelle))) vieux=true;
-
+          let content;
+          if(node.grid) {
+            content=node.lay_project_description
+            //content=JSON.parse(node.grid).cont;
+            //content=content[content.length-1].cont;
+          }
+          else content=node.excerpt;
 
           return (
           <Post key={node.slug} vieux={vieux}>
@@ -111,7 +119,7 @@ const BlogIndex = (props) => {
                 <Title dangerouslySetInnerHTML={{ __html: node.title }} />
 
             </Link>
-            <Desc dangerouslySetInnerHTML={{ __html: node.excerpt }} />
+            <Desc dangerouslySetInnerHTML={{ __html: content }} />
             <Button to={node.slug}>Lire la suite →</Button>
 
           </Post>
@@ -149,6 +157,8 @@ export const pageQuery = graphql`
           wpcf_date
           wpcf_heure
           wpcf_type
+          grid
+          lay_project_description
           fields {
             dateEv
           }

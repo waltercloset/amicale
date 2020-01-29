@@ -13,6 +13,7 @@ const Image=styled.div`
   overflow:hidden;
   margin-left:auto;
   width:300px;
+  max-height:400px;
 
 `
 const Pic=styled(Img)`
