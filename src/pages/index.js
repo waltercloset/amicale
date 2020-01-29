@@ -106,6 +106,7 @@ const BlogIndex = (props) => {
             content=node.lay_project_description
             //content=JSON.parse(node.grid).cont;
             //content=content[content.length-1].cont;
+            content=content.replace("line-height:", " ");
           }
           else content=node.excerpt;
 
