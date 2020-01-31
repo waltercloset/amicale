@@ -2,7 +2,7 @@ import Typography from "typography"
 const typography = new Typography({
   baseFontSize: '16px',
   baseLineHeight: 1.566667,
-  headerFontFamily: ['Libre Baskerville','Merriweather','Avenir Next', 'Helvetica Neue', 'Segoe UI', 'Helvetica', 'Arial', 'sans-serif'],
+  headerFontFamily: ['Helvetica','Merriweather','Avenir Next', 'Helvetica Neue', 'Segoe UI', 'Helvetica', 'Arial', 'sans-serif'],
   bodyFontFamily: ['Libre Baskerville','Merriweather','Georgia', 'serif'],
   googleFonts: [
     {

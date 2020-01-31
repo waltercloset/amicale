@@ -16,7 +16,7 @@ const Menu = styled.div`
 `
 
 export const Bar = styled.h2`
-  position: sticky;
+  position: relative;
   top: 0px;
   background-color: rgba(255,255,255,0.7);
   z-index:10;
