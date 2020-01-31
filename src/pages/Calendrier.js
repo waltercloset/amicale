@@ -50,6 +50,13 @@ export const Cal=styled.div`
         color:grey;
     }
 
+    .react-calendar__tile--active {
+        background-color: white !important;
+        a {
+            background-color:blueviolet !important;
+        }
+
+    }
 
     .react-calendar__month-view__days{
         padding: 0px;
