@@ -1,4 +1,5 @@
 import React from "react"
+import {useState} from 'react'
 import { Link, graphql } from "gatsby"
 
 import Bio from "./bio"
@@ -125,6 +126,7 @@ const Puce = props =>{
 
 
 export const Calendrier = ({dates,fermes,onClick}) => {
+    const [state,setState]=useState(false);
     if(!dates) dates=initdates;
     if(!fermes) fermes=[];
     const ajoutClasses=({ activeStartDate, date, view })=>{
@@ -143,6 +145,11 @@ export const Calendrier = ({dates,fermes,onClick}) => {
             return <Puce id={date.getDate()+'-'+date.getMonth()}>{date.getDate()}</Puce>
         }
         return <div>{date.getDate()}</div>
+    }
+
+    const handleClick=(value)=>{
+        setState(!state);
+        onClick(value);
     }
 
     return (
