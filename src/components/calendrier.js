@@ -1,17 +1,17 @@
 import React from "react"
 import { Link, graphql } from "gatsby"
 
-import Bio from "../components/bio"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Bio from "./bio"
+import Layout from "./layout"
+import SEO from "./seo"
 import { rhythm, scale } from "../utils/typography"
 import styled from "styled-components"
 
-import {NavBar} from "../components/navbar"
-import Infos from "../components/infos"
+import {NavBar} from "./navbar"
+import Infos from "./infos"
 import Img from "gatsby-image"
 import moment from 'moment'
-import {Cimage} from '../components/cimage'
+import {Cimage} from './cimage'
 
 import Calendar from 'react-calendar'
 import { rewind } from "react-helmet"

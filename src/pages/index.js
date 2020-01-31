@@ -13,7 +13,7 @@ import Infos from "../components/infos"
 import Img from "gatsby-image"
 import moment from 'moment'
 import {Cimage} from '../components/cimage'
-import {Cal, Calendrier} from './Calendrier'
+import {Cal, Calendrier} from '../components/calendrier'
 
 
 const Avatar = styled(Cimage)`
