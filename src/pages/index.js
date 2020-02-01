@@ -119,7 +119,7 @@ const List=props=>{
   return (
     <Liste >
     {/* on parcourt le tableau des posts passé en props, et on le transforme en tableau de composants Post, qui sera affiché direct*/}
-    {posts.map(({ node }) => {
+    {posts.map(({ node }, index) => {
 
       // récupération de la propriété fluid de l'image de présentation du post (à passer au composant Img de gatsby-image)
       let imageSource =null;
@@ -145,7 +145,7 @@ const List=props=>{
       if(id===dateSelected) selected=true;
 
       return (
-      <Post id={id} key={node.slug} vieux={props.vieux} selected={selected}>
+      <Post id={id} key={node.slug+{index}} vieux={props.vieux} selected={selected}>
         <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
         <Link to={`/${node.slug}`}>
           {imageSource&&<Avatar vieux={props.vieux} fluid={imageSource}
@@ -170,7 +170,10 @@ const List=props=>{
 
 const BlogIndex = (props) => {
   const [dateSelected, selectDate]=useState('31-12-2000'); // la date sélectionnée peut changer on la met dans un state
-
+  const [state,setState]=useState(false);
+  useEffect(() => {
+      setState(true);
+    });
 
   const {
     title,
@@ -205,18 +208,18 @@ const BlogIndex = (props) => {
     On place le Calendrier dans un container pour le comportement sticky (cf. css)
   */
   return (
-    <Layout location={props.location} title={title}>
+    <Layout key={state} location={props.location} title={title}>
       <SEO title="All posts" />
 
       <NavBar/>
       <Main>
 
-        <List posts={aVenir} dateSelected={dateSelected} location={props.location}/>
+        <List key='liste1' posts={aVenir} dateSelected={dateSelected} location={props.location}/>
 
         <ContainerCal><Calendrier dates={dates} fermes={[]} onClick={onDateClick} /></ContainerCal>
 
       </Main>
-      <List posts={passes} dateSelected={dateSelected} location={props.location} vieux={true}/>
+      <List key='liste2' posts={passes} dateSelected={dateSelected} location={props.location} vieux={true}/>
 
     </Layout>
   )
