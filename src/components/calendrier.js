@@ -1,5 +1,5 @@
 import React from "react"
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import { Link, graphql } from "gatsby"
 
 import Bio from "./bio"
@@ -127,6 +127,11 @@ const Puce = props =>{
 
 export const Calendrier = ({dates,fermes,onClick}) => {
     const [state,setState]=useState(false);
+
+    useEffect(() => {
+        setState(true);
+      });
+
     if(!dates) dates=initdates;
     if(!fermes) fermes=[];
     const ajoutClasses=({ activeStartDate, date, view })=>{
@@ -148,13 +153,13 @@ export const Calendrier = ({dates,fermes,onClick}) => {
     }
 
     const handleClick=(value)=>{
-        setState(!state);
+        //setState(!state);
         onClick(value);
     }
 
     return (
-    <Cal>
-        <Calendar onClickDay={onClick} calendarType='US' tileDisabled={desactiver} tileContent={placerPuces} tileClassName={ajoutClasses}/>
+    <Cal key={state}>
+        <Calendar onClickDay={handleClick} calendarType='US' tileDisabled={desactiver} tileContent={placerPuces} tileClassName={ajoutClasses}/>
     </Cal>
 
     )
