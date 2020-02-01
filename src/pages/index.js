@@ -188,7 +188,7 @@ const BlogIndex = (props) => {
     if(dateActuelle.isSameOrBefore(moment(node.fields.dateEv), 'days')){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
        dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
-       aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
+       if(passes[0].node.slug===node.slug) aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
     }
   });
   aVenir.reverse(); // le tableau des événements à venir est inversé (prochaine date en premier, etc.)
