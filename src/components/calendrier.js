@@ -34,18 +34,7 @@ export const Cal=styled.div`
         color: black;
     }
 
-    .ferme {
-            background-color: transparent;
-            color: black;
-            background:
-            linear-gradient(to top left,
-                rgba(0,0,0,0) 0%,
-                rgba(0,0,0,0) calc(50% - 0.8px),
-                rgba(0,0,0,1) 50%,
-                rgba(0,0,0,0) calc(50% + 0.8px),
-                rgba(0,0,0,0) 100%);
 
-    }
     .react-calendar__month-view__days__day--neighboringMonth,
     .react-calendar__tile:disabled.react-calendar__month-view__days__day--neighboringMonth{
         color:grey;
@@ -54,9 +43,15 @@ export const Cal=styled.div`
     .react-calendar__tile--active {
         background-color: white !important;
         a {
-            background-color:blueviolet !important;
+            background-color:yellow !important;
         }
 
+    }
+
+    abbr{
+        cursor: default;
+        text-decoration:none;
+        border:none;
     }
 
     .react-calendar__month-view__days{
@@ -82,7 +77,7 @@ export const Cal=styled.div`
                 height: 41px;
                 width: 41px;
                 border-radius: 50%;
-                background-color: red;
+                background-color: crimson;
                 position: absolute;
                 margin-left: -4px;
                 margin-top: -20px;
@@ -99,7 +94,7 @@ export const Cal=styled.div`
 
             a:hover
             {
-                background-color:blueviolet;
+                background-color:yellow;
                 cursor: pointer !important;
 
             }
@@ -116,6 +111,19 @@ export const Cal=styled.div`
         .react-calendar__tile--active:hover {
             background: #006edc;
             color: white;
+        }
+
+        .ferme {
+            background-color: transparent;
+            color: black;
+            background:
+            linear-gradient(to top left,
+                rgba(0,0,0,0) 0%,
+                rgba(0,0,0,0) calc(50% - 0.8px),
+                rgba(0,0,0,1) 50%,
+                rgba(0,0,0,0) calc(50% + 0.8px),
+                rgba(0,0,0,0) 100%);
+
         }
     }
 `
@@ -137,7 +145,7 @@ export const Calendrier = ({dates,fermes,onClick}) => {
     const ajoutClasses=({ activeStartDate, date, view })=>{
         console.log(date.toUTCString())
         if(dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear())) return 'encule';
-        if(date.getDay()===2) return 'ferme';
+        if(date.getDay()===2 || date.getDay()===1 || date.getDay()===6 || date.getDay()===0) return 'ferme';
         //if(dates.find(dateEv=> dateEv.getDate() === date.getDate() && dateEv.getMonth() === date.getMonth() &&dateEv.getYear() === date.getYear())) return 'ferme'
         return 'rien';
     }
@@ -145,11 +153,13 @@ export const Calendrier = ({dates,fermes,onClick}) => {
     const desactiver=({ activeStartDate, date, view })=> view==='month' && !dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear());
 
     const placerPuces =({date, view})=>{
+        if(view==='month'){
 
-        if(dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear())){
-            return <Puce id={date.getDate()+'-'+date.getMonth()}>{date.getDate()}</Puce>
+            if(dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear())){
+                return <Puce id={date.getDate()+'-'+date.getMonth()}>{date.getDate()}</Puce>
+            }
+            return <div>{date.getDate()}</div>
         }
-        return <div>{date.getDate()}</div>
     }
 
     const handleClick=(value)=>{
@@ -159,7 +169,14 @@ export const Calendrier = ({dates,fermes,onClick}) => {
 
     return (
     <Cal key={state}>
-        <Calendar onClickDay={handleClick} calendarType='US' tileDisabled={desactiver} tileContent={placerPuces} tileClassName={ajoutClasses}/>
+        <Calendar onClickDay={handleClick}
+                  calendarType='ISO 8601'
+                  tileDisabled={desactiver}
+                  tileContent={placerPuces}
+                  tileClassName={ajoutClasses}
+                  minDetail="decade"
+                  minDate={new Date(Date.parse("01 april 2018"))}
+                  />
     </Cal>
 
     )
