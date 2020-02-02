@@ -170,9 +170,9 @@ const List=props=>{
 
 const BlogIndex = (props) => {
   const [dateSelected, selectDate]=useState('31-12-2000'); // la date sélectionnée peut changer on la met dans un state
-  const [state,setState]=useState(false);
+  const [state,setState]=useState(1);
   useEffect(() => {
-      setState(true);
+      setState(2);
     });
 
   const {
@@ -188,7 +188,7 @@ const BlogIndex = (props) => {
   const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
     const dateEv=new Date(node.fields.dateEv);
-    if(dateEv>dateActuelle){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
+    if(dateEv>dateActuelle || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
        dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
        aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
