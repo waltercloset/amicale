@@ -55,21 +55,7 @@ const Title = styled.h2`
     padding-top:${rhythm(1)};
 
 `
-const Liste = styled.div`
-  width:100%;
-  display:flex;
-  flex-direction:row;
-  flex-wrap: wrap;
-  justify-content: center;
-  ul{
-    list-style:none;
-    display:flex;
-    justify-content:center;
-  }
-  li{
-    padding: ${rhythm(1)};
-  }
-`
+
 
 const Desc = styled.div`
   margin-top:0;
@@ -89,11 +75,76 @@ const ContainerCal=styled.div`
   width:350px;
   min-width:350px;
   ${Cal} {
-    position: fixed;
+    position: sticky;
+    top:0px;
   }
 `
 
+const List=props=>{
+  const posts=props.posts;
+  const dateSelected=props.dateSelected;
+  const dateActuelle=new Date();
+  return (
+    <Liste >
+    {posts.map(({ node }) => {
+      let imageSource =null;
+      let vieux=false;
 
+      if(node.featured_media && node.featured_media.localFile && node.featured_media.localFile.childImageSharp){
+        imageSource = node.featured_media.localFile.childImageSharp
+        .fluid
+      }
+      if(node.fields.dateEv && moment(node.fields.dateEv).isBefore(moment(dateActuelle))) vieux=true;
+      let content;
+      if(node.grid) {
+        content=node.lay_project_description
+        //content=JSON.parse(node.grid).cont;
+        //content=content[content.length-1].cont;
+        content=content.replace("line-height:", " ");
+      }
+      else content=node.excerpt;
+      let selected=false;
+      let id=new Date(node.fields.dateEv).getDate()+'-'+new Date(node.fields.dateEv).getMonth();
+      if(id===dateSelected) selected=true;
+      return (
+      <Post id={id} key={node.slug} vieux={vieux} selected={selected}>
+        <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
+        <Link to={`/${node.slug}`}>
+          {imageSource&&<Avatar vieux={vieux} fluid={imageSource}
+            height={node.featured_media.media_details.height}
+            width={node.featured_media.media_details.width}/>}
+            <Title dangerouslySetInnerHTML={{ __html: node.title }} />
+
+        </Link>
+        <Desc dangerouslySetInnerHTML={{ __html: content }} />
+        <Button to={node.slug}>Lire la suite →</Button>
+
+      </Post>
+    )})
+      }
+    </Liste>
+  )
+
+}
+
+const Liste = styled.div`
+
+  width:100%;
+  display:flex;
+  flex-direction:row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  ul{
+    list-style:none;
+    display:flex;
+    justify-content:center;
+  }
+  li{
+    padding: ${rhythm(1)};
+  }
+
+
+`
 
 const BlogIndex = (props) => {
   const [dateSelected, selectDate]=useState(new Date());
@@ -104,16 +155,24 @@ const BlogIndex = (props) => {
   const posts = props.data.allWordpressPost.edges;
   const dateActuelle=new Date();
 
+  const aVenir=[];
+  const passes=posts.slice();
   const dates=[];
   posts.forEach(({node})=>{
-    if(new Date(node.fields.dateEv)>dateActuelle) dates.push({dateEv: new Date(node.fields.dateEv), idEv: node.slug})
+    if(new Date(node.fields.dateEv)>dateActuelle){
+       dates.push({dateEv: new Date(node.fields.dateEv), idEv: node.slug})
+       aVenir.push(passes.shift());
+
+    }
   });
-  console.log(dates);
+  aVenir.reverse();
+
 
   const onDateClick=(date)=>{
       const id=date.getDate()+'-'+date.getMonth();
       selectDate(id);
   }
+
 
   return (
     <Layout location={props.location} title={title}>
@@ -121,48 +180,13 @@ const BlogIndex = (props) => {
 
       <NavBar/>
       <Main>
-        <Liste>
-          {posts.map(({ node }) => {
-            let imageSource =null;
-            let vieux=false;
 
-            if(node.featured_media && node.featured_media.localFile && node.featured_media.localFile.childImageSharp){
-              imageSource = node.featured_media.localFile.childImageSharp
-              .fluid
-            }
-            if(node.fields.dateEv && moment(node.fields.dateEv).isBefore(moment(dateActuelle))) vieux=true;
-            let content;
-            if(node.grid) {
-              content=node.lay_project_description
-              //content=JSON.parse(node.grid).cont;
-              //content=content[content.length-1].cont;
-              content=content.replace("line-height:", " ");
-            }
-            else content=node.excerpt;
-            let selected=false;
-            let id=new Date(node.fields.dateEv).getDate()+'-'+new Date(node.fields.dateEv).getMonth();
-            if(id===dateSelected) selected=true;
-            return (
-
-            <Post id={id} key={node.slug} vieux={vieux} selected={selected}>
-              <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
-              <Link to={node.slug}>
-                {imageSource&&<Avatar vieux={vieux} fluid={imageSource}
-                  height={node.featured_media.media_details.height}
-                  width={node.featured_media.media_details.width}/>}
-                  <Title dangerouslySetInnerHTML={{ __html: node.title }} />
-
-              </Link>
-              <Desc dangerouslySetInnerHTML={{ __html: content }} />
-              <Button to={node.slug}>Lire la suite →</Button>
-
-            </Post>
-          )})}
-        </Liste>
-
+        <List posts={aVenir} dateSelected={dateSelected} location={props.location}/>
         <ContainerCal><Calendrier dates={dates} fermes={[]} onClick={onDateClick} /></ContainerCal>
 
       </Main>
+      <List posts={passes} dateSelected={dateSelected} location={props.location}/>
+
     </Layout>
   )
 }
