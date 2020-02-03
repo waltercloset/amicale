@@ -13,7 +13,7 @@ import Infos from "../components/infos"
 import {Cimage} from '../components/cimage'
 import {Cal, Calendrier} from '../components/calendrier'
 import { compareJMA, convertToId } from "../utils/dates"
-import moment from 'react-moment'
+import moment from 'moment'
 
 const Avatar = styled(Cimage)`
     margin:auto;
@@ -170,10 +170,7 @@ const List=props=>{
 
 const BlogIndex = (props) => {
   const [dateSelected, selectDate]=useState('31-12-2000'); // la date sélectionnée peut changer on la met dans un state
-  const [state,setState]=useState(1);
-  useEffect(() => {
-      setState(2);
-    });
+
 
   const {
     title,
@@ -188,7 +185,7 @@ const BlogIndex = (props) => {
   const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
     const dateEv=new Date(node.fields.dateEv);
-    if(dateActuelle.isBefore(moment(dateEv), 'days')){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
+    if(dateActuelle.isSameOrBefore(moment(dateEv), 'days')){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
        dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
        aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
@@ -208,7 +205,7 @@ const BlogIndex = (props) => {
     On place le Calendrier dans un container pour le comportement sticky (cf. css)
   */
   return (
-    <Layout key={state} location={props.location} title={title}>
+    <Layout location={props.location} title={title}>
       <SEO title="All posts" />
 
       <NavBar/>
