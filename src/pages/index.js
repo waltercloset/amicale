@@ -1,5 +1,5 @@
 import React from "react"
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import { Link, graphql } from "gatsby"
 
 import Bio from "../components/bio"
@@ -170,6 +170,11 @@ const List=props=>{
 
 const BlogIndex = (props) => {
   const [dateSelected, selectDate]=useState('31-12-2000'); // la date sélectionnée peut changer on la met dans un state
+  const [state,setState]=useState(false);
+  useEffect(() => {
+      setState(true);
+    });
+
   const {
     title,
     postPrefix,
@@ -204,7 +209,7 @@ const BlogIndex = (props) => {
     On place le Calendrier dans un container pour le comportement sticky (cf. css)
   */
   return (
-    <Layout location={props.location} title={title}>
+    <Layout key={state }location={props.location} title={title}>
       <SEO title="All posts" />
 
       <NavBar/>
