@@ -1,23 +1,15 @@
 import React from "react"
 import {useState, useEffect} from 'react'
-import { Link, graphql } from "gatsby"
 
-import Bio from "./bio"
-import Layout from "./layout"
-import SEO from "./seo"
-import { rhythm, scale } from "../utils/typography"
 import styled from "styled-components"
 
-import {NavBar} from "./navbar"
-import Infos from "./infos"
-import Img from "gatsby-image"
-import moment from 'moment'
-import {Cimage} from './cimage'
 
 import Calendar from 'react-calendar'
 import { rewind } from "react-helmet"
 import { navigate } from "@reach/router";
+import { convertToId, compareJMA } from "../utils/dates"
 
+// des dates pour tester
 const initdates =   [{dateEv: new Date(Date.parse('1 Jan 2020 GMT')), id:'100'},
 {dateEv: new Date(Date.parse('3 Jan 2020 GMT')), id:'100'},
 {dateEv: new Date(Date.parse('16 Jan 2020 GMT')), id:'100'}]
@@ -128,42 +120,51 @@ export const Cal=styled.div`
     }
 `
 
+
+// composant Puce pour le contenu de chaque puce du calendrier (ici juste un lien vers une ancre)
 const Puce = props =>{
     return <a href={'#'+props.id}><div>{props.children}</div></a>
 }
 
 
 export const Calendrier = ({dates,fermes,onClick}) => {
-    const [state,setState]=useState(false);
 
+    // ces hooks servent juste à ce que ce petit comportement React marche avec Gatsby (cf. hydratation)
+    const [state,setState]=useState(false);
     useEffect(() => {
         setState(true);
       });
 
     if(!dates) dates=initdates;
     if(!fermes) fermes=[];
+
+    // une fonction qui donne des classes CSS aux différents éléments du calendrier (cf react-calendar)
     const ajoutClasses=({ activeStartDate, date, view })=>{
-        console.log(date.toUTCString())
-        if(dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear())) return 'encule';
+
+        // si la date du calendrier fait partie des dates d'événements à venir (le tableau dates) on lui donne la classe encule
+        if(dates.find(event=> compareJMA(event.dateEv, date))) return 'encule';
+        // si la date du calendrier correspond à un jour fermé (samedi, dimanche, lundi, mardi) -> classe ferme
         if(date.getDay()===2 || date.getDay()===1 || date.getDay()===6 || date.getDay()===0) return 'ferme';
-        //if(dates.find(dateEv=> dateEv.getDate() === date.getDate() && dateEv.getMonth() === date.getMonth() &&dateEv.getYear() === date.getYear())) return 'ferme'
+        //if(fermes.find(dateEv=> dateEv.getDate() === date.getDate() && dateEv.getMonth() === date.getMonth() &&dateEv.getYear() === date.getYear())) return 'ferme'
         return 'rien';
     }
 
+    // une fonction qui choisit les dates qui ne sont pas cliquables (toutes celles qui ne correspondent pas à un événement)
     const desactiver=({ activeStartDate, date, view })=> view==='month' && !dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear());
 
+    // une fonction qui indique le contenu de chaque case du calendrier (si date d'un événement, une Puce, sinon juste le numéro)
     const placerPuces =({date, view})=>{
         if(view==='month'){
 
-            if(dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear())){
-                return <Puce id={date.getDate()+'-'+date.getMonth()}>{date.getDate()}</Puce>
+            if(dates.find(event=> compareJMA(event.dateEv, date) )){
+                return <Puce id={convertToId(date)}>{date.getDate()}</Puce>
             }
             return <div>{date.getDate()}</div>
         }
     }
 
+    // quand on clique sur une case (non désactivée) on appelle la fonction passée en props au Calendrier
     const handleClick=(value)=>{
-        //setState(!state);
         onClick(value);
     }
 

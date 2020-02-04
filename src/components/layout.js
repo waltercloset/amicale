@@ -85,7 +85,7 @@ const Layout = (props) => {
           {` `}
           <a href="https://www.gatsbyjs.org">Gatsby</a>
           {` `}
-          | Built by <a href="https://justinwhall.com">Justin W. Hall</a>
+          | Built by L'amicale
         </footer>
       </div>
     )

@@ -10,10 +10,9 @@ import styled from "styled-components"
 
 import {NavBar} from "../components/navbar"
 import Infos from "../components/infos"
-import Img from "gatsby-image"
-import moment from 'moment'
 import {Cimage} from '../components/cimage'
 import {Cal, Calendrier} from '../components/calendrier'
+import { compareJMA, convertToId } from "../utils/dates"
 
 
 const Avatar = styled(Cimage)`
@@ -78,54 +77,11 @@ const ContainerCal=styled.div`
     position: sticky;
     top:0px;
   }
+  @media (max-width: 1024px) {
+    display:none;
+  }
 `
 
-const List=props=>{
-  const posts=props.posts;
-  const dateSelected=props.dateSelected;
-  const dateActuelle=new Date();
-  return (
-    <Liste >
-    {posts.map(({ node }) => {
-      let imageSource =null;
-      let vieux=false;
-
-      if(node.featured_media && node.featured_media.localFile && node.featured_media.localFile.childImageSharp){
-        imageSource = node.featured_media.localFile.childImageSharp
-        .fluid
-      }
-      if(node.fields.dateEv && moment(node.fields.dateEv).isBefore(moment(dateActuelle))) vieux=true;
-      let content;
-      if(node.grid) {
-        content=node.lay_project_description
-        //content=JSON.parse(node.grid).cont;
-        //content=content[content.length-1].cont;
-        content=content.replace("line-height:", " ");
-      }
-      else content=node.excerpt;
-      let selected=false;
-      let id=new Date(node.fields.dateEv).getDate()+'-'+new Date(node.fields.dateEv).getMonth();
-      if(id===dateSelected) selected=true;
-      return (
-      <Post id={id} key={node.slug} vieux={vieux} selected={selected}>
-        <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
-        <Link to={`/${node.slug}`}>
-          {imageSource&&<Avatar vieux={vieux} fluid={imageSource}
-            height={node.featured_media.media_details.height}
-            width={node.featured_media.media_details.width}/>}
-            <Title dangerouslySetInnerHTML={{ __html: node.title }} />
-
-        </Link>
-        <Desc dangerouslySetInnerHTML={{ __html: content }} />
-        <Button to={node.slug}>Lire la suite →</Button>
-
-      </Post>
-    )})
-      }
-    </Liste>
-  )
-
-}
 
 const Liste = styled.div`
 
@@ -146,8 +102,74 @@ const Liste = styled.div`
 
 `
 
+
+/* COMPOSANT List affiche une liste (composant stylé Liste) d'événements (date, titre, description, etc.)
+props={
+  dateSelected : date de l'évenement (une string JJ-MM-YYYY) sélectionné (par exemple dans le calendrier)
+  vieux: si les événements de la liste sont tous antérieurs (ou égaux) à la date du jour
+  posts: tableau de posts (objets edges récupérés d'une requête GraphQL)
+}
+
+*/
+
+const List=props=>{
+  const posts=props.posts;
+  const dateSelected=props.dateSelected;
+
+  return (
+    <Liste >
+    {/* on parcourt le tableau des posts passé en props, et on le transforme en tableau de composants Post, qui sera affiché direct*/}
+    {posts.map(({ node }) => {
+
+      // récupération de la propriété fluid de l'image de présentation du post (à passer au composant Img de gatsby-image)
+      let imageSource =null;
+      if(node.featured_media && node.featured_media.localFile && node.featured_media.localFile.childImageSharp){
+        imageSource = node.featured_media.localFile.childImageSharp
+        .fluid
+      }
+
+      // récupération de la description du post (description de thème Wordpress lay ou excerpt en cas d'autre thème)
+      let content;
+      if(node.grid) {
+        content=node.lay_project_description
+        //content=JSON.parse(node.grid).cont;
+        //content=content[content.length-1].cont;
+        content=content.replace("line-height:", " ");
+      }
+      else content=node.excerpt;
+
+      // on vérifie si le post est selectionné, cad correspond à dateSelected
+      let selected=false;
+      const dateEv=new Date(node.fields.dateEv); //on transforme la date de la requête graphQl en objet Date
+      const id=convertToId(dateEv); // on fabrique un id (une string JJ-MM-YYYY avec cette date cf ./utils/dates
+      if(id===dateSelected) selected=true;
+
+      return (
+      <Post id={id} key={node.slug} vieux={props.vieux} selected={selected}>
+        <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
+        <Link to={`/${node.slug}`}>
+          {imageSource&&<Avatar vieux={props.vieux} fluid={imageSource}
+            height={node.featured_media.media_details.height}
+            width={node.featured_media.media_details.width}/>}
+
+            <Title dangerouslySetInnerHTML={{ __html: node.title }} />
+
+        </Link>
+        <Desc dangerouslySetInnerHTML={{ __html: content }} />
+        <Button to={node.slug}>Lire la suite →</Button>
+      </Post>
+    )})
+      }
+    </Liste>
+  )
+
+}
+
+
+
+
 const BlogIndex = (props) => {
-  const [dateSelected, selectDate]=useState(new Date());
+  const [dateSelected, selectDate]=useState('31-12-2000'); // la date sélectionnée peut changer on la met dans un state
   const {
     title,
     postPrefix,
@@ -155,25 +177,32 @@ const BlogIndex = (props) => {
   const posts = props.data.allWordpressPost.edges;
   const dateActuelle=new Date();
 
+  // on fabrique les tableaux des posts (objets de graphql) d'événements à venir et passés (en comparant avec la date du jour)
   const aVenir=[];
-  const passes=posts.slice();
-  const dates=[];
+  const passes=posts.slice(); // on copie le tableau de tous les posts
+  const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
-    if(new Date(node.fields.dateEv)>dateActuelle){
-       dates.push({dateEv: new Date(node.fields.dateEv), idEv: node.slug})
-       aVenir.push(passes.shift());
-
+    const dateEv=new Date(node.fields.dateEv);
+    if(dateEv>dateActuelle|| compareJMA(dateEv, dateActuelle)){ // si c'est un événement à venir
+       dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
+       //pour l'instant idEv ne sert pas au calendrier
+       aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
     }
   });
-  aVenir.reverse();
+  aVenir.reverse(); // le tableau des événements à venir est inversé (prochaine date en premier, etc.)
 
 
-  const onDateClick=(date)=>{
-      const id=date.getDate()+'-'+date.getMonth();
-      selectDate(id);
+  const onDateClick=(date)=>{ // quand une date est cliquée dans le calendrier
+      const id=convertToId(date);
+      selectDate(id); // alors on change le state
   }
 
+  /*
+    Layout est un composant qui ajoute le header, le footer, possède les CSS media queries
+    NavBar la barre de navigation
 
+    On place le Calendrier dans un container pour le comportement sticky (cf. css)
+  */
   return (
     <Layout location={props.location} title={title}>
       <SEO title="All posts" />
@@ -182,10 +211,11 @@ const BlogIndex = (props) => {
       <Main>
 
         <List posts={aVenir} dateSelected={dateSelected} location={props.location}/>
+
         <ContainerCal><Calendrier dates={dates} fermes={[]} onClick={onDateClick} /></ContainerCal>
 
       </Main>
-      <List posts={passes} dateSelected={dateSelected} location={props.location}/>
+      <List posts={passes} dateSelected={dateSelected} location={props.location} vieux={true}/>
 
     </Layout>
   )
