@@ -188,7 +188,7 @@ const BlogIndex = (props) => {
   const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
     const dateEv=new Date(node.fields.dateEv);
-    if(dateEv>dateActuelle|| compareJMA(dateEv, dateActuelle)){ // si c'est un événement à venir
+    if(dateEv>dateActuelle){//|| compareJMA(dateEv, dateActuelle)){ // si c'est un événement à venir
        dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
        aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
