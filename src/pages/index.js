@@ -13,7 +13,7 @@ import Infos from "../components/infos"
 import {Cimage} from '../components/cimage'
 import {Cal, Calendrier} from '../components/calendrier'
 import { compareJMA, convertToId } from "../utils/dates"
-
+import moment from 'react-moment'
 
 const Avatar = styled(Cimage)`
     margin:auto;
@@ -180,7 +180,7 @@ const BlogIndex = (props) => {
     postPrefix,
   } = props.data.site.siteMetadata;
   const posts = props.data.allWordpressPost.edges;
-  const dateActuelle=new Date();
+  const dateActuelle=moment(new Date());
 
   // on fabrique les tableaux des posts (objets de graphql) d'événements à venir et passés (en comparant avec la date du jour)
   const aVenir=[];
@@ -188,7 +188,7 @@ const BlogIndex = (props) => {
   const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
     const dateEv=new Date(node.fields.dateEv);
-    if(dateEv>dateActuelle || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
+    if(dateActuelle.isBefore(moment(dateEv), 'days')){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
        dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
        aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
