@@ -146,7 +146,7 @@ const List=props=>{
 
       return (
       <Post id={id} key={node.slug+{index}} vieux={props.vieux} selected={selected}>
-        <Infos location= {props.location} date={node.fields.dateEv} cats={node.tags} />
+        <Infos location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} cats={node.tags} />
         <Link to={`/${node.slug}`}>
           {imageSource&&<Avatar vieux={props.vieux} fluid={imageSource}
             height={node.featured_media.media_details.height}
@@ -256,7 +256,8 @@ export const pageQuery = graphql`
           grid
           lay_project_description
           fields {
-            dateEv
+            dateEv(locale: "fr")
+            dateEvFr: dateEv(locale :"fr", formatString: "ddd D MMMM YYYY")
           }
           tags {
             name
