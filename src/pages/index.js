@@ -180,7 +180,7 @@ const BlogIndex = (props) => {
     postPrefix,
   } = props.data.site.siteMetadata;
   const posts = props.data.allWordpressPost.edges;
-  const dateActuelle=moment();
+  const dateActuelle=moment().locale('fr');
 
   // on fabrique les tableaux des posts (objets de graphql) d'événements à venir et passés (en comparant avec la date du jour)
   const aVenir=[];
@@ -188,7 +188,7 @@ const BlogIndex = (props) => {
   const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
     const dateEv=new Date(node.fields.dateEv);
-    if(dateActuelle.isSameOrBefore(moment(node.fields.dateEv), 'days')){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
+    if(moment(node.fields.dateEv).difference(moment(),"days")>=0){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
        dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
        if(passes[0].node.slug===node.slug) aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
