@@ -134,9 +134,8 @@ const List = props => {
         if (id === dateSelected) selected = true
 
         return (
-          <Post id={id} key={uuid()} vieux={props.vieux} selected={selected}>
+          <Post id={id} key={node.slug} vieux={props.vieux} selected={selected}>
             <Infos
-              key={uuid()}
               location={props.location}
               date={node.fields.dateEv}
               dateFr={node.fields.dateEvFr}
