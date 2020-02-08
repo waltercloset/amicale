@@ -22,7 +22,7 @@ const Infos=(props)=>{
 
   const rootPath = `${__PATH_PREFIX__}/`
   let date=[];
-  let affDate, affHeure, affDiff, affDateFr, affHeureFr;
+  let affDate, affHeure, affDiff, affDateFr, affHeureFr,affDiff2;
   const dateActuelle=new Date();
   let annee=null;
 
@@ -36,7 +36,9 @@ const Infos=(props)=>{
     affHeure=<div>{moment(props.date).locale('fr').format('H:mm')}</div>
     affDateFr=<div>{props.dateFr}</div>
     affHeureFr=<div>{props.heureFr}</div>
-    affDiff=moment(props.date).fromNow();
+    affDiff=moment(props.date).diff(moment(),"seconds");
+    affDiff2=props.diffSec;
+
 
   if(props.date && props.location.pathname !== rootPath) {
     //date=props.date.toLocaleDateString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour:'numeric', minute:'numeric', timeZone: "Europe/Paris"}).split(' ')
@@ -51,6 +53,8 @@ const Infos=(props)=>{
         {affHeureFr}
 
         {affDiff}
+        {affDiff2}
+
         {affDateFr}
         <p className="cats">{props.cats && props.cats.map(tag=>(tag.name+' '))}</p>
     </Inf>

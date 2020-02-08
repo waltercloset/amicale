@@ -146,7 +146,7 @@ const List=props=>{
 
       return (
       <Post id={id} key={node.slug+index} vieux={props.vieux} selected={selected}>
-        <Infos key={node.slug+index*1000} location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} heureFr={node.fields.heureEvFr} cats={node.tags} />
+        <Infos key={node.slug+index*1000} location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} heureFr={node.fields.heureEvFr} diffSec={node.fields.diffSec} cats={node.tags} />
         <Link to={`/${node.slug}`}>
           {imageSource&&<Avatar vieux={props.vieux} fluid={imageSource}
             height={node.featured_media.media_details.height}
@@ -184,7 +184,8 @@ const BlogIndex = (props) => {
   // on fabrique les tableaux des posts (objets de graphql) d'événements à venir et passés (en comparant avec la date du jour)
   const aVenir=[];
   const passes=posts.slice(); // on copie le tableau de tous les posts
-  const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
+  const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements du futur, au format Date (objet JS) pour passer au calendrier
+  // avec un rebuild tous les jours à minuit on pourrait aussi utiliser diff dans graphql (à voir si la variable d'env timezone fctionne chez Netlify)
   posts.forEach(({node})=>{
     const dateEv=moment(node.fields.dateEv);
     if(!dateEv.isBefore(moment())){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
@@ -193,11 +194,14 @@ const BlogIndex = (props) => {
        if(passes[0].node.slug===node.slug) aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
     }
   });
+
+  // on ajoute à aVenir les événements du jour
   while(moment(passes[0].node.fields.dateEv).locale('fr').isSame(moment(),"days")) {
     dates.push({dateEv: moment(passes[0].node.fields.dateEv).toDate(), idEv: passes[0].node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
     aVenir.push(passes.shift());
   }
+
   aVenir.reverse(); // le tableau des événements à venir est inversé (prochaine date en premier, etc.)
 
   const onDateClick=(date)=>{ // quand une date est cliquée dans le calendrier
@@ -263,6 +267,7 @@ export const pageQuery = graphql`
             dateEv(locale: "fr")
             dateEvFr: dateEv(locale :"fr", formatString: "ddd D MMMM YYYY")
             heureEvFr: dateEv(formatString: "H:mm")
+            diffSec: dateEv(difference:"second")
           }
           tags {
             name
