@@ -8,7 +8,7 @@ import Calendar from 'react-calendar'
 import { rewind } from "react-helmet"
 import { navigate } from "@reach/router";
 import { convertToId, compareJMA } from "../utils/dates"
-
+import moment from 'moment'
 // des dates pour tester
 const initdates =   [{dateEv: new Date(Date.parse('1 Jan 2020 GMT')), id:'100'},
 {dateEv: new Date(Date.parse('3 Jan 2020 GMT')), id:'100'},
@@ -163,6 +163,13 @@ export const Calendrier = ({dates,fermes,onClick}) => {
         }
     }
 
+    const affJour=(locale, date)=>{
+        const j=["DIM","LUN","MAR","MER", "JEU","VEN","SAM"];
+        return j[date.getDay()];
+    }
+
+    const affMois=(locale,date)=> moment(date).locale('fr').format('MMMM YYYY')
+
     // quand on clique sur une case (non désactivée) on appelle la fonction passée en props au Calendrier
     const handleClick=(value)=>{
         onClick(value);
@@ -176,6 +183,8 @@ export const Calendrier = ({dates,fermes,onClick}) => {
                   tileDisabled={desactiver}
                   tileContent={placerPuces}
                   tileClassName={ajoutClasses}
+                  formatShortWeekday={affJour}
+                  formatMonthYear={affMois}
                   minDetail="decade"
                   minDate={new Date(Date.parse("01 april 2018"))}
                   />
