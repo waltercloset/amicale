@@ -50,12 +50,7 @@ const Infos=(props)=>{
         <span style={{display:'flex'}}>{affDate}{annee}</span>
         –
         {affHeure}
-        {affHeureFr}
 
-        {affDiff}
-        {affDiff2}
-
-        {affDateFr}
         <p className="cats">{props.cats && props.cats.map(tag=>(tag.name+' '))}</p>
     </Inf>
 )}

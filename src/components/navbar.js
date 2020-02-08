@@ -39,7 +39,7 @@ export const NavBar =()=> (
   <Bar>
     <Title to="/">L'Amicale, 31 rue Sébastien Gryphe Lyon 7e</Title>
     <Menu>
-      <ElementMenu to="/calendar">Calendrier</ElementMenu>/
+      <ElementMenu to="/agenda">Calendrier</ElementMenu>/
       <ElementMenu>Infos</ElementMenu>/
       <ElementMenu>Contact</ElementMenu>
     </Menu>
