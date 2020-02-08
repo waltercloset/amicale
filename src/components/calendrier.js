@@ -117,6 +117,18 @@ export const Cal=styled.div`
                 rgba(0,0,0,0) 100%);
 
         }
+
+        .vacance {
+            background-color: transparent;
+            color: black;
+            background:
+            linear-gradient(to top left,
+                rgba(0,0,0,0) 0%,
+                rgba(0,0,0,0) calc(50% - 0.8px),
+                rgba(255,0,0,1) 50%,
+                rgba(0,0,0,0) calc(50% + 0.8px),
+                rgba(0,0,0,0) 100%);
+        }
     }
 `
 
@@ -143,15 +155,23 @@ export const Calendrier = ({dates,fermes,onClick}) => {
 
         // si la date du calendrier fait partie des dates d'événements à venir (le tableau dates) on lui donne la classe encule
         if(dates.find(event=> compareJMA(event.dateEv, date))) return 'encule';
+
+        // si la date du calendrier est comprise dans une période de vacances on associe la classe CSS vacance.
+        let fermeture=fermes.find(vacance=>(
+            moment(date).isSameOrAfter(moment(vacance.node.acf.debut_des_vacances)) && moment(date).isBefore(moment(vacance.node.acf.fin_des_vacances))
+        ))
+        if(fermeture)    return 'vacance'
+
         // si la date du calendrier correspond à un jour fermé (samedi, dimanche, lundi, mardi) -> classe ferme
         if(date.getDay()===2 || date.getDay()===1 || date.getDay()===6 || date.getDay()===0) return 'ferme';
-        //if(fermes.find(dateEv=> dateEv.getDate() === date.getDate() && dateEv.getMonth() === date.getMonth() &&dateEv.getYear() === date.getYear())) return 'ferme'
         return 'rien';
     }
 
     // une fonction qui choisit les dates qui ne sont pas cliquables (toutes celles qui ne correspondent pas à un événement)
-    const desactiver=({ activeStartDate, date, view })=> view==='month' && !dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear());
-
+    const desactiver=({ activeStartDate, date, view })=>(
+        view==='month'
+        && !dates.find(event=> event.dateEv.getDate() === date.getDate() && event.dateEv.getMonth() === date.getMonth() &&event.dateEv.getYear() === date.getYear())
+    )
     // une fonction qui indique le contenu de chaque case du calendrier (si date d'un événement, une Puce, sinon juste le numéro)
     const placerPuces =({date, view})=>{
         if(view==='month'){

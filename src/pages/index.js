@@ -181,6 +181,7 @@ const BlogIndex = (props) => {
     postPrefix,
   } = props.data.site.siteMetadata;
   const posts = props.data.allWordpressPost.edges;
+  const vacances = props.data.allWordpressWpVac.edges;
   // on fabrique les tableaux des posts (objets de graphql) d'événements à venir et passés (en comparant avec la date du jour)
   const aVenir=[];
   const passes=posts.slice(); // on copie le tableau de tous les posts
@@ -224,7 +225,7 @@ const BlogIndex = (props) => {
 
         <List key='liste1' posts={aVenir} dateSelected={dateSelected} location={props.location}/>
 
-        <ContainerCal><Calendrier dates={dates} fermes={[]} onClick={onDateClick} /></ContainerCal>
+        <ContainerCal><Calendrier dates={dates} fermes={vacances} onClick={onDateClick} /></ContainerCal>
 
       </Main>
       <List key='liste2' posts={passes} dateSelected={dateSelected} location={props.location} vieux={true}/>
@@ -243,6 +244,17 @@ export const pageQuery = graphql`
         postPrefix
       }
     }
+    allWordpressWpVac {
+      edges {
+        node {
+          acf {
+            debut_des_vacances
+            fin_des_vacances
+          }
+        }
+      }
+    }
+
     allWordpressPost(
        filter: {
          fields: {
