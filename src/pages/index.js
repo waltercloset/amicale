@@ -145,8 +145,8 @@ const List=props=>{
       if(id===dateSelected) selected=true;
 
       return (
-      <Post id={id} key={node.slug+{index}} vieux={props.vieux} selected={selected}>
-        <Infos location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} cats={node.tags} />
+      <Post id={id} key={node.slug+index} vieux={props.vieux} selected={selected}>
+        <Infos key={node.slug+index*1000} location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} cats={node.tags} />
         <Link to={`/${node.slug}`}>
           {imageSource&&<Avatar vieux={props.vieux} fluid={imageSource}
             height={node.featured_media.media_details.height}
