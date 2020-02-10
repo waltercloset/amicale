@@ -1,20 +1,19 @@
-import React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 
-import styled from "styled-components"
+import styled from "styled-components";
 
-import Calendar from "react-calendar"
-import { rewind } from "react-helmet"
-import { navigate } from "@reach/router"
-import moment from "moment"
+import Calendar from "react-calendar";
+import { rewind } from "react-helmet";
+import { navigate } from "@reach/router";
+import moment from "moment";
 
-import { convertToId, compareJMA } from "../utils/dates"
+import { convertToId, compareJMA } from "../utils/dates";
 // des dates pour tester
 const initdates = [
   { dateEv: new Date(Date.parse("1 Jan 2020 GMT")), id: "100" },
   { dateEv: new Date(Date.parse("3 Jan 2020 GMT")), id: "100" },
   { dateEv: new Date(Date.parse("16 Jan 2020 GMT")), id: "100" },
-]
+];
 
 export const Cal = styled.div`
   .react-calendar {
@@ -122,40 +121,38 @@ export const Cal = styled.div`
       );
     }
   }
-`
+`;
 
 // composant Puce pour le contenu de chaque puce du calendrier (ici juste un lien vers une ancre)
-const Puce = props => {
-  return (
-    <a href={"#" + props.id}>
-      <div>{props.children}</div>
-    </a>
-  )
-}
+const Puce = props => (
+  <a href={`#${props.id}`}>
+    <div>{props.children}</div>
+  </a>
+);
 
 export const Calendrier = ({ dates, fermes, onClick }) => {
   // ces hooks servent juste à ce que ce petit comportement React marche avec Gatsby (cf. hydratation)
   const [state, setState] = useState(false);
   useEffect(() => {
-    setState(true)
-  })
+    setState(true);
+  });
 
-  if (!dates) dates = initdates
-  if (!fermes) fermes = []
+  if (!dates) dates = initdates;
+  if (!fermes) fermes = [];
 
   // une fonction qui donne des classes CSS aux différents éléments du calendrier (cf react-calendar)
   const ajoutClasses = ({ activeStartDate, date, view }) => {
     // si la date du calendrier fait partie des dates d'événements à venir (le tableau dates) on lui donne la classe encule
-    if (dates.find(event => compareJMA(event.dateEv, date))) return "encule"
+    if (dates.find(event => compareJMA(event.dateEv, date))) return "encule";
 
     // si la date du calendrier est comprise dans une période de vacances on associe la classe CSS vacance.
-    let fermeture = fermes.find(
+    const fermeture = fermes.find(
       vacance =>
         moment(date).isSameOrAfter(
           moment(vacance.node.acf.debut_des_vacances)
         ) && moment(date).isBefore(moment(vacance.node.acf.fin_des_vacances))
-    )
-    if (fermeture) return "vacance"
+    );
+    if (fermeture) return "vacance";
 
     // si la date du calendrier correspond à un jour fermé (samedi, dimanche, lundi, mardi) -> classe ferme
     if (
@@ -164,9 +161,9 @@ export const Calendrier = ({ dates, fermes, onClick }) => {
       date.getDay() === 6 ||
       date.getDay() === 0
     )
-      return "ferme"
-    return "rien"
-  }
+      return "ferme";
+    return "rien";
+  };
 
   // une fonction qui choisit les dates qui ne sont pas cliquables (toutes celles qui ne correspondent pas à un événement)
   const desactiver = ({ activeStartDate, date, view }) =>
@@ -176,31 +173,31 @@ export const Calendrier = ({ dates, fermes, onClick }) => {
         event.dateEv.getDate() === date.getDate() &&
         event.dateEv.getMonth() === date.getMonth() &&
         event.dateEv.getYear() === date.getYear()
-    )
+    );
   // une fonction qui indique le contenu de chaque case du calendrier (si date d'un événement, une Puce, sinon juste le numéro)
   const placerPuces = ({ date, view }) => {
     if (view === "month") {
       if (dates.find(event => compareJMA(event.dateEv, date))) {
-        return <Puce id={convertToId(date)}>{date.getDate()}</Puce>
+        return <Puce id={convertToId(date)}>{date.getDate()}</Puce>;
       }
-      return <div>{date.getDate()}</div>
+      return <div>{date.getDate()}</div>;
     }
-  }
+  };
 
   const affJour = (locale, date) => {
-    const j = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"]
-    return j[date.getDay()]
-  }
+    const j = ["DIM", "LUN", "MAR", "MER", "JEU", "VEN", "SAM"];
+    return j[date.getDay()];
+  };
 
   const affMois = (locale, date) =>
     moment(date)
       .locale("fr")
-      .format("MMMM YYYY")
+      .format("MMMM YYYY");
 
   // quand on clique sur une case (non désactivée) on appelle la fonction passée en props au Calendrier
   const handleClick = value => {
-    onClick(value)
-  }
+    onClick(value);
+  };
 
   return (
     <Cal key={state}>
@@ -217,5 +214,5 @@ export const Calendrier = ({ dates, fermes, onClick }) => {
         minDate={new Date(Date.parse("01 april 2018"))}
       />
     </Cal>
-  )
-}
+  );
+};
