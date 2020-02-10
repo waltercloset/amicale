@@ -21,14 +21,20 @@ const Agenda = props =>{
     const posts = props.data.allWordpressPost.edges;
     const dates=[];
 
-    posts.forEach(post=>{
-        const m=moment(post.fiels.dateEv).locale('fr');
-        if(dates[dates.length-1] && !dates[dates.length-1].month===m.month())
-            dates.push({month: m.month()})
+    posts.forEach(({node})=>{
+        let m;
+        if(node.fields.dateEv) m=moment(node.fields.dateEv).locale('fr');
+        if(!dates[dates.length-1] || dates[dates.length-1].month!==m.format("MMMM YYYY"))
+            dates.push({month: m.format("MMMM YYYY"), events: []})
+        dates[dates.length-1].events.push(node);
     });
     return (
         <div>
-
+            {dates.map(date=>(
+                <div>
+                    {date.month}
+                    {date.events.map(node=>node.title)}
+                </div>))}
         </div>
 
     );
