@@ -172,6 +172,7 @@ export const Calendrier = ({dates,fermes,onClick}) => {
     <Cal key={state}>
         <Calendar onClickDay={handleClick}
                   calendarType='ISO 8601'
+                  locale="fr-FR"
                   tileDisabled={desactiver}
                   tileContent={placerPuces}
                   tileClassName={ajoutClasses}

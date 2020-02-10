@@ -181,22 +181,20 @@ const BlogIndex = (props) => {
     postPrefix,
   } = props.data.site.siteMetadata;
   const posts = props.data.allWordpressPost.edges;
-  const dateActuelle=moment().locale('fr');
-
   // on fabrique les tableaux des posts (objets de graphql) d'événements à venir et passés (en comparant avec la date du jour)
   const aVenir=[];
   const passes=posts.slice(); // on copie le tableau de tous les posts
   const dates=[]; // on fabrique aussi un tableau avec juste les dates des événements à venir, au format Date (objet JS) pour passer au calendrier
   posts.forEach(({node})=>{
-    const dateEv=new Date(node.fields.dateEv);
-    if(!moment(node.fields.dateEv).isBefore(moment())){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
-       dates.push({dateEv: dateEv, idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
+    const dateEv=moment(node.fields.dateEv);
+    if(!dateEv.isBefore(moment())){// || (dateEv.getDate() === dateActuelle.getDate() && dateEv.getMonth()===dateActuelle.getMonth() && dateEv.getFullYear() === dateActuelle.getFullYear())) {//compareJMA(dateEv, dateActuelle, true)){ // si c'est un événement à venir
+       dates.push({dateEv: dateEv.toDate(), idEv: node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
        if(passes[0].node.slug===node.slug) aVenir.push(passes.shift()); // on enlève du tableau des posts d'événements passés ceux qui sont à venir
     }
   });
   while(moment(passes[0].node.fields.dateEv).locale('fr').isSame(moment(),"days")) {
-    dates.push({dateEv: new Date(passes[0].node.fields.dateEv), idEv: passes[0].node.slug}) // on ajoute la date de l'événement au tableau dates ;
+    dates.push({dateEv: moment(passes[0].node.fields.dateEv).toDate(), idEv: passes[0].node.slug}) // on ajoute la date de l'événement au tableau dates ;
        //pour l'instant idEv ne sert pas au calendrier
     aVenir.push(passes.shift());
   }
