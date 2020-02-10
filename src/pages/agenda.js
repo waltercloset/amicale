@@ -16,19 +16,29 @@ import { compareJMA, convertToId } from "../utils/dates"
 import moment from 'moment'
 
 
+const Evenement=styled.div`
 
-
-const Event=({event})=>(
-  <div>
-    <Link to={event.slug} dangerouslySetInnerHTML={{ __html: event.title }} />
-  </div>
-)
-
-const Evenement=styled(Event)`
+    margin: 1em;
 
 `
 
+const Mois=styled.div`
+    text-transform: uppercase;
+    margin: 2em;
+
+`
+
+const Event=({event})=>(
+  <Evenement>
+    <Link to={event.slug} dangerouslySetInnerHTML={{ __html: event.title }} />
+  </Evenement>
+)
+
+
+
 const Agenda = props =>{
+    moment.locale('fr');
+    moment.tz.setDefault("Europe/Paris");
 
     const posts = props.data.allWordpressPost.edges;
     const dates=[];
@@ -44,8 +54,8 @@ const Agenda = props =>{
         <div>
             {dates.map(date=>(
                 <div>
-                    {date.month}
-                    {date.events.map(node=><Evenement event={node}/>)}
+                    <Mois>{date.month}</Mois>
+                    {date.events.map(node=><Event event={node}/>)}
                 </div>))}
         </div>
 

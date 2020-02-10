@@ -146,7 +146,7 @@ const List=props=>{
 
       return (
       <Post id={id} key={node.slug+index} vieux={props.vieux} selected={selected}>
-        <Infos key={node.slug+index*1000} location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} cats={node.tags} />
+        <Infos key={node.slug+index*1000} location= {props.location} date={node.fields.dateEv} dateFr={node.fields.dateEvFr} heureFr={node.fields.heureEvFr} cats={node.tags} />
         <Link to={`/${node.slug}`}>
           {imageSource&&<Avatar vieux={props.vieux} fluid={imageSource}
             height={node.featured_media.media_details.height}
@@ -166,7 +166,8 @@ const List=props=>{
 }
 
 
-
+  moment.locale('fr');
+  moment.tz.setDefault("Europe/Paris");
 
 const BlogIndex = (props) => {
   const [dateSelected, selectDate]=useState('31-12-2000'); // la date sélectionnée peut changer on la met dans un state
@@ -263,6 +264,7 @@ export const pageQuery = graphql`
           fields {
             dateEv(locale: "fr")
             dateEvFr: dateEv(locale :"fr", formatString: "ddd D MMMM YYYY")
+            heureEvFr: dateEv(formatString: "H:mm")
           }
           tags {
             name
